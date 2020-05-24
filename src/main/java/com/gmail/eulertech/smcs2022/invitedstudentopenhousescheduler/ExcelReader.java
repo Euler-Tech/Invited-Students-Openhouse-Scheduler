@@ -11,7 +11,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 
 public class ExcelReader {
-	XSSFWorkbook wb;
+	private XSSFWorkbook wb;
 
 	public ExcelReader(String fs) {
 		try {
