@@ -46,6 +46,10 @@ public class InvitedStudent {
 		return name;
 	}
 
+	public String getSession(int i) {
+		return schedule[i];
+	}
+	
 	public InvitedStudent(boolean smcs, boolean glob, boolean hum, String name) {
 		this.smcs = smcs;
 		this.glob = glob;

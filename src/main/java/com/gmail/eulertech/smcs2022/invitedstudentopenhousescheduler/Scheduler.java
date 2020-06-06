@@ -1,24 +1,31 @@
 package com.gmail.eulertech.smcs2022.invitedstudentopenhousescheduler;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Scheduler {
 
 	
-	private static ArrayList<InvitedStudent> onemArr;
-	private static ArrayList<InvitedStudent> onegArr;
-	private static ArrayList<InvitedStudent> onehArr;
-	private static ArrayList<InvitedStudent> twomgArr;
-	private static ArrayList<InvitedStudent> twomhArr;
-	private static ArrayList<InvitedStudent> twoghArr;
-	private static ArrayList<InvitedStudent> threeArr;
-	private static ArrayList<InvitedStudent>[] general;
-	private static ArrayList<InvitedStudent>[] smcs;
-	private static ArrayList<InvitedStudent>[] global;
-	private static ArrayList<InvitedStudent>[] hum;
+	private ArrayList<InvitedStudent> onemArr;
+	private ArrayList<InvitedStudent> onegArr;
+	private ArrayList<InvitedStudent> onehArr;
+	private ArrayList<InvitedStudent> twomgArr;
+	private ArrayList<InvitedStudent> twomhArr;
+	private ArrayList<InvitedStudent> twoghArr;
+	private ArrayList<InvitedStudent> threeArr;
+	private ArrayList<InvitedStudent> total;
+	private ArrayList<InvitedStudent>[] general;
+	private ArrayList<InvitedStudent>[] smcs;
+	private ArrayList<InvitedStudent>[] global;
+	private ArrayList<InvitedStudent>[] hum;
+	private String sheet;
+	
+	public Scheduler(File sheet) {
+		this.sheet = sheet.getAbsolutePath();
+	}
 
-	private static void editTwoGH(int gen, int i1, int i2, int two) {
+	private void editTwoGH(int gen, int i1, int i2, int two) {
 		general[gen].add(twoghArr.get(0));
 		if(global[i1].size() < 50 && hum[i2].size() < 50) {
 			global[i1].add(twoghArr.get(0));
@@ -48,7 +55,7 @@ public class Scheduler {
 		}
 	}
 	
-	private static void editTwoMH(int gen, int i1, int i2, int two) {
+	private void editTwoMH(int gen, int i1, int i2, int two) {
 		general[gen].add(twomhArr.get(0));
 		if(smcs[i1].size() < 50 && hum[i2].size() < 50) {
 			smcs[i1].add(twomhArr.get(0));
@@ -78,7 +85,7 @@ public class Scheduler {
 		}
 	}
 	
-	private static void editTwoMG(int gen, int i1, int i2, int two) {
+	private void editTwoMG(int gen, int i1, int i2, int two) {
 		general[gen].add(twomgArr.get(0));
 		if(smcs[i1].size() < 50 && global[i2].size() < 50) {
 			smcs[i1].add(twomgArr.get(0));
@@ -108,7 +115,7 @@ public class Scheduler {
 		}
 	}
 	
-	private static void editThree(int gen, int i1, int i2, int i3) {
+	private void editThree(int gen, int i1, int i2, int i3) {
 		general[gen].add(threeArr.get(0));
 		int[][] permute = new int[][] {
 			{i1,i2,i3},
@@ -164,8 +171,8 @@ public class Scheduler {
 		threeArr.remove(0);
 	}
 
-	public static void main(String[] args) {
-		ExcelReader er = new ExcelReader("Student List Data.xlsx");
+	public ArrayList<InvitedStudent> schedule() {
+		ExcelReader er = new ExcelReader(sheet);
 		onemArr = new ArrayList<InvitedStudent>();
 		onegArr = new ArrayList<InvitedStudent>();
 		onehArr = new ArrayList<InvitedStudent>();
@@ -173,12 +180,14 @@ public class Scheduler {
 		twomhArr = new ArrayList<InvitedStudent>();
 		twoghArr = new ArrayList<InvitedStudent>();
 		threeArr = new ArrayList<InvitedStudent>();
+		total = new ArrayList<InvitedStudent>();
 		for(int i = 1; i < er.getRowCount(0); i++) {
 			boolean e = er.getString(0,i,3).strip().equals("Yes");
 			boolean h = er.getString(0,i,4).strip().equals("Yes");
 			boolean m = er.getString(0,i,5).strip().equals("Yes");
 			String name = er.getString(0, i, 1);
 			InvitedStudent is = new InvitedStudent(m,e,h, name);
+			total.add(is);
 			switch(is.getNumberOfInvitations()) {
 			case 1:
 				if(is.isGlob()) onegArr.add(is);
@@ -211,6 +220,32 @@ public class Scheduler {
 		smcs = new ArrayList[] {new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>()};
 		global = new ArrayList[] {new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>()};
 		hum = new ArrayList[] {new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>(), new ArrayList<InvitedStudent>()};
+		
+		for(int i = 0; i < 10; i++) {
+			general[0].add(threeArr.get(0));
+			smcs[1].add(threeArr.get(0));
+			global[2].add(threeArr.get(0));
+			hum[3].add(threeArr.get(0));
+			threeArr.remove(0);
+			
+			general[1].add(threeArr.get(0));
+			smcs[2].add(threeArr.get(0));
+			global[3].add(threeArr.get(0));
+			hum[0].add(threeArr.get(0));
+			threeArr.remove(0);
+			
+			general[2].add(threeArr.get(0));
+			smcs[3].add(threeArr.get(0));
+			global[0].add(threeArr.get(0));
+			hum[1].add(threeArr.get(0));
+			threeArr.remove(0);
+			
+			general[3].add(threeArr.get(0));
+			smcs[0].add(threeArr.get(0));
+			global[1].add(threeArr.get(0));
+			hum[2].add(threeArr.get(0));
+			threeArr.remove(0);
+		}
 
 		while(onemArr.size() > 0) {
 			if(onemArr.size() % 2 == 0) {
@@ -646,12 +681,24 @@ public class Scheduler {
 			}
 		}
 		
-		for(int i = 0; i < 4; i++) {
-			System.out.println("General session " + (1+i) + ": " + general[i].size());
-			System.out.println("SMCS session " + (1+i) + ": " + smcs[i].size());
-			System.out.println("Global session " + (1+i) + ": " + global[i].size());
-			System.out.println("Humanitites session " + (1+i) + ": " + hum[i].size());
-		}
+		
+		
+		return total;
 	}
 
+	public ArrayList<InvitedStudent> getGeneral(int i) {
+		return general[i];
+	}
+
+	public ArrayList<InvitedStudent> getGlobal(int i) {
+		return global[i];
+	}
+
+	public ArrayList<InvitedStudent> getSMCS(int i) {
+		return smcs[i];
+	}
+
+	public ArrayList<InvitedStudent> getHumanities(int i) {
+		return hum[i];
+	}
 }
