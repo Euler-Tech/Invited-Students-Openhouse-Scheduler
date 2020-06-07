@@ -35,7 +35,7 @@ public class ResultsScreen extends JFrame implements ActionListener{
 		this.dir = dir;
 		this.links = links;
 		this.al = al;
-		setTitle("Configuration");
+		setTitle("Confirmation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(750,900);
 	    
