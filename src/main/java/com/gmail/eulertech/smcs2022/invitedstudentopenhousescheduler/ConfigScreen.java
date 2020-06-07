@@ -21,9 +21,9 @@ import com.itextpdf.text.DocumentException;
 
 public class ConfigScreen extends JFrame implements ActionListener{
 	private static JFileChooser j = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-	private File map = new File("MainBuildingMapforInvitedNight.fw.png");
+	private File map = new File(getClass().getResource("MainBuildingMapforInvitedNight.fw.png").getPath());
 	private File dir = FileSystemView.getFileSystemView().getHomeDirectory();
-	private File sheet = new File("Sample.xlsx");
+	private File sheet = new File(getClass().getResource("Sample.xlsx").getPath());
 	private JLabel selectedFile;
 	private JLabel selectedDir;
 	private JLabel selectedSheet;
