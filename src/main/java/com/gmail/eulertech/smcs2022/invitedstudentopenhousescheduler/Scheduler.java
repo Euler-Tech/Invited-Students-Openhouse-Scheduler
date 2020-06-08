@@ -186,24 +186,26 @@ public class Scheduler {
 			boolean h = er.getString(0,i,4).strip().equals("Yes");
 			boolean m = er.getString(0,i,5).strip().equals("Yes");
 			String name = er.getString(0, i, 1);
-			InvitedStudent is = new InvitedStudent(m,e,h, name);
-			total.add(is);
-			switch(is.getNumberOfInvitations()) {
-			case 1:
-				if(is.isGlob()) onegArr.add(is);
-				if(is.isHum()) onehArr.add(is);
-				if(is.isSmcs()) onemArr.add(is);
-				break;
-			case 2:
-				if(is.isGlob() && is.isHum()) twoghArr.add(is);
-				if(is.isGlob() && is.isSmcs()) twomgArr.add(is);
-				if(is.isHum() && is.isSmcs()) twomhArr.add(is);
-				break;
-			case 3:
-				threeArr.add(is);
-				break;
-			default:
-				System.out.println("Error: the student with name " + name + " is listed as having an invalid number invitations (" + is.getNumberOfInvitations() + ").");
+			if(!name.equals("")) {
+				InvitedStudent is = new InvitedStudent(m,e,h, name);
+				total.add(is);
+				switch(is.getNumberOfInvitations()) {
+				case 1:
+					if(is.isGlob()) onegArr.add(is);
+					if(is.isHum()) onehArr.add(is);
+					if(is.isSmcs()) onemArr.add(is);
+					break;
+				case 2:
+					if(is.isGlob() && is.isHum()) twoghArr.add(is);
+					if(is.isGlob() && is.isSmcs()) twomgArr.add(is);
+					if(is.isHum() && is.isSmcs()) twomhArr.add(is);
+					break;
+				case 3:
+					threeArr.add(is);
+					break;
+				default:
+					System.out.println("Error: the student with name " + name + " is listed as having an invalid number invitations (" + is.getNumberOfInvitations() + ").");
+				}
 			}
 		}
 		

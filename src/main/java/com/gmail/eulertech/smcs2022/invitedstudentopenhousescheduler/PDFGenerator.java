@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -12,6 +13,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 public class PDFGenerator {
 	private Document doc;
 	private PdfWriter pw;
+	private PdfDocument pdf;
 	private Image map;
 	private String[] rooms;
 	private InvitedStudent is;
@@ -20,6 +22,7 @@ public class PDFGenerator {
 	
 	public PDFGenerator(InvitedStudent is, String map, String[] rooms, String out, String[] urls) {
 		doc = new Document();
+		pdf = new PdfDocument();
 		try {
 			pw = PdfWriter.getInstance(doc, new FileOutputStream(out+is.getName()+"Schedule.pdf"));
 		} catch (FileNotFoundException | DocumentException e) {
@@ -88,14 +91,23 @@ public class PDFGenerator {
 		p.setAlignment(Paragraph.ALIGN_CENTER);
 		doc.add(p);
 
-		float scaler = ((doc.getPageSize().getWidth() - doc.leftMargin()
+		float widthScaler = ((doc.getPageSize().getWidth() - doc.leftMargin()
 		               - doc.rightMargin()) / map.getWidth()) * 100;
+		
+		float scaler;
+		float size = 375;
+		if(map.getHeight()*widthScaler/100.0 > size) {
+			scaler = size/map.getHeight()*100;
+		} else {
+			scaler = widthScaler;
+		}
 
 		map.scalePercent(scaler);
+		map.setAlignment(Element.ALIGN_CENTER);
 		doc.add(map);
 		
 		font = FontFactory.getFont(FontFactory.HELVETICA, 20, BaseColor.BLACK);
-		doc.add(new Paragraph(" \r\n \r\n", font));
+		doc.newPage();
 		
 		p = new Paragraph("Poolesville High School-\r\n" + 
 				"More Than the Magnets!\r\n\r\n ", gold);

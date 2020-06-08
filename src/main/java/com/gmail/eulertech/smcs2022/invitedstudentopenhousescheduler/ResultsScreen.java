@@ -16,6 +16,7 @@ public class ResultsScreen extends JFrame implements ActionListener{
 	private String[] links;
 	private ArrayList<InvitedStudent> al;
 	private JLabel statusText;
+	private JButton proceed;
 	
 	public static JPanel makeTitle(int x, int y, String text, Font font) {
 		JPanel out = new JPanel();
@@ -38,6 +39,7 @@ public class ResultsScreen extends JFrame implements ActionListener{
 		setTitle("Confirmation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(750,900);
+	    setResizable(false);
 	    
 	    Font font = new Font("Times New Roman", Font.BOLD, 30);
 	    add(makeTitle(400, 50, "Results", font), BorderLayout.NORTH);
@@ -84,10 +86,10 @@ public class ResultsScreen extends JFrame implements ActionListener{
 	    overall.add(grid);
 	    
 	    JPanel confirm = new JPanel();
-		JButton button = new JButton("Proceed");
+		proceed = new JButton("Proceed");
 		statusText = new JLabel("Click to generate pdfs");
-		button.addActionListener(this);
-		confirm.add(button);
+		proceed.addActionListener(this);
+		confirm.add(proceed);
 		confirm.add(statusText);
 		
 		overall.add(confirm);
@@ -112,6 +114,7 @@ public class ResultsScreen extends JFrame implements ActionListener{
 						System.out.println("????");
 					}
 				}
+				proceed.setVisible(false);
 				statusText.setText("Complete!");
 			}
 		}

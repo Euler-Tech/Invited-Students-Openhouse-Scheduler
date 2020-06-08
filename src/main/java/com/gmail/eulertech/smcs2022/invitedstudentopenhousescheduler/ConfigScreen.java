@@ -1,6 +1,7 @@
 package com.gmail.eulertech.smcs2022.invitedstudentopenhousescheduler;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -9,14 +10,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -90,11 +85,11 @@ public class ConfigScreen extends JFrame implements ActionListener{
 		InputStream mapStream = getClass().getResourceAsStream("/MainBuildingMapforInvitedNight.fw.png");
 		InputStream sheetStream = getClass().getResourceAsStream("/Sample.xlsx");
 		try {
-			map = File.createTempFile("TempMap", "png");
+			map = File.createTempFile("MainBuildingMapforInvitedNight.fw", ".png");
 			map.deleteOnExit();
 			IOUtils.copy(mapStream, map);
 
-			sheet = File.createTempFile("TempSheet", "xlsx");
+			sheet = File.createTempFile("Sample", ".xlsx");
 			sheet.deleteOnExit();
 			IOUtils.copy(sheetStream, sheet);
 		} catch (IOException e) {
@@ -102,6 +97,7 @@ public class ConfigScreen extends JFrame implements ActionListener{
 		setTitle("Configuration");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(750,900);
+	    setResizable(false);
 	    
 	    Font font = new Font("Times New Roman", Font.BOLD, 30);
 	    add(makeTitle(400, 50, "Configuration", font), BorderLayout.NORTH);
@@ -261,24 +257,36 @@ public class ConfigScreen extends JFrame implements ActionListener{
 					} else {
 						selectedFile.setVisible(false);
 						selectedFile.setText("That was not a valid image");
+						selectedFile.setForeground(Color.RED);
 						selectedFile.setVisible(true);
-						TimeUnit.SECONDS.sleep(1);
-						selectedFile.setVisible(false);
-						selectedFile.setText(map.getName());
-						selectedFile.setVisible(true);
+						Timer delay = new Timer(2000, new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								selectedFile.setVisible(false);
+								selectedFile.setForeground(Color.BLACK);
+								selectedFile.setText(map.getName());
+								selectedFile.setVisible(true);
+							}
+						});
+						
+						delay.setRepeats(false);
+						delay.start();
 					}
 				} catch (IOException e1) {
 					selectedFile.setVisible(false);
 					selectedFile.setText("That was not a valid image");
+					selectedFile.setForeground(Color.RED);
 					selectedFile.setVisible(true);
-					try {
-						TimeUnit.SECONDS.sleep(1);
-					} catch (InterruptedException e2) {
-					}
-					selectedFile.setVisible(false);
-					selectedFile.setText(map.getName());
-					selectedFile.setVisible(true);
-				} catch (InterruptedException e1) {
+					Timer delay = new Timer(2000, new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							selectedFile.setVisible(false);
+							selectedFile.setForeground(Color.BLACK);
+							selectedFile.setText(map.getName());
+							selectedFile.setVisible(true);
+						}
+					});
+					
+					delay.setRepeats(false);
+					delay.start();
 				}
 			} else if(button.getText().equals("Choose Output Location...")){
 				dir = chooseDirectory();
@@ -294,7 +302,6 @@ public class ConfigScreen extends JFrame implements ActionListener{
 				bob.setSchedule(3, "h");
 				String[] f = {clubs.getText(), trans.getText(), accept.getText(), phs.getText(), comm.getText(), sports.getText()};
 				String[] r = new String[]{intro.getText(), genP.getText(), genS.getText(), glob.getText(), smcs.getText(), hum.getText()};
-				System.out.println(dir.getAbsolutePath());
 				PDFGenerator x = new PDFGenerator(bob, map.getAbsolutePath(), r, dir.getAbsolutePath() + "\\", f);
 				try {
 					x.generate();
@@ -311,6 +318,22 @@ public class ConfigScreen extends JFrame implements ActionListener{
 					selectedSheet.setVisible(false);
 					selectedSheet.setText(sheet.getName());
 					selectedSheet.setVisible(true);
+				} else {
+					selectedSheet.setVisible(false);
+					selectedSheet.setText("That was not a valid spreadsheet");
+					selectedSheet.setForeground(Color.RED);
+					selectedSheet.setVisible(true);
+					Timer delay = new Timer(2000, new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							selectedSheet.setVisible(false);
+							selectedSheet.setForeground(Color.BLACK);
+							selectedSheet.setText(sheet.getName());
+							selectedSheet.setVisible(true);
+						}
+					});
+					
+					delay.setRepeats(false);
+					delay.start();
 				}
 			}
 		}
