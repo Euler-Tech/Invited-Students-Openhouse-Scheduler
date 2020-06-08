@@ -9,7 +9,12 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -17,13 +22,15 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 
+import org.apache.poi.util.IOUtils;
+
 import com.itextpdf.text.DocumentException;
 
 public class ConfigScreen extends JFrame implements ActionListener{
 	private static JFileChooser j = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
-	private File map = new File(getClass().getResource("MainBuildingMapforInvitedNight.fw.png").getPath());
+	private File map;
 	private File dir = FileSystemView.getFileSystemView().getHomeDirectory();
-	private File sheet = new File(getClass().getResource("Sample.xlsx").getPath());
+	private File sheet;
 	private JLabel selectedFile;
 	private JLabel selectedDir;
 	private JLabel selectedSheet;
@@ -80,6 +87,18 @@ public class ConfigScreen extends JFrame implements ActionListener{
 	}
 	
 	public ConfigScreen(ActionListener l) {
+		InputStream mapStream = getClass().getResourceAsStream("/MainBuildingMapforInvitedNight.fw.png");
+		InputStream sheetStream = getClass().getResourceAsStream("/Sample.xlsx");
+		try {
+			map = File.createTempFile("TempMap", "png");
+			map.deleteOnExit();
+			IOUtils.copy(mapStream, map);
+
+			sheet = File.createTempFile("TempSheet", "xlsx");
+			sheet.deleteOnExit();
+			IOUtils.copy(sheetStream, sheet);
+		} catch (IOException e) {
+		}
 		setTitle("Configuration");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setSize(750,900);

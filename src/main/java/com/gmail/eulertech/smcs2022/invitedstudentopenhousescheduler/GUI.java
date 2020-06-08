@@ -2,6 +2,7 @@ package com.gmail.eulertech.smcs2022.invitedstudentopenhousescheduler;
 
 import java.awt.EventQueue;
 import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.*;
